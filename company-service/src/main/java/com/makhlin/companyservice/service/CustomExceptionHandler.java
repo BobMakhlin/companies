@@ -1,6 +1,7 @@
 package com.makhlin.companyservice.service;
 
 import com.makhlin.companyservice.service.exception.BadParamsException;
+import com.makhlin.companyservice.service.exception.ItemNotFoundException;
 import com.makhlin.companyservice.swagger.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -28,4 +29,17 @@ public class CustomExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
     }
+
+    @ExceptionHandler(value = {ItemNotFoundException.class})
+    public ResponseEntity<Object> handleItemNotFoundException(ItemNotFoundException ex) {
+        log.error("Item not found exception {}", ex.getMessage());
+        var body = new ErrorResponse()
+                .code("NotFound")
+                .message(ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+    }
+
 }

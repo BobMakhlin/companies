@@ -29,4 +29,7 @@ public class CompanyEntity {
     @ManyToOne
     @JoinColumn(name = "industry_id", nullable = false)
     private IndustryEntity industry;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private CompanyStatus status;
 }

@@ -22,7 +22,8 @@ CREATE TABLE company
     email               VARCHAR(255)                 NOT NULL,
     phone               VARCHAR(20)                  NOT NULL,
     fax                 VARCHAR(20) NULL,
-    industry_id         INT REFERENCES industry (id) NOT NULL
+    industry_id         INT REFERENCES industry (id) NOT NULL,
+    status              VARCHAR(50)                  NOT NULL
 );
 
 CREATE INDEX idx_company_industry_id ON company (industry_id);

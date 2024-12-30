@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Company
@@ -15,8 +17,31 @@ import java.util.Objects;
 
 
 public class Company extends CompanyDetails {
+    @JsonProperty("id")
+    private UUID id = null;
     @JsonProperty("status")
     private StatusEnum status = null;
+
+    public Company id(UUID id) {
+        this.id = id;
+        return this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return id
+     **/
+    @Schema(description = "")
+
+    @Valid
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public Company status(StatusEnum status) {
         this.status = status;
@@ -47,19 +72,21 @@ public class Company extends CompanyDetails {
             return false;
         }
         Company company = (Company) o;
-        return Objects.equals(this.status, company.status) &&
+        return Objects.equals(this.id, company.id) &&
+               Objects.equals(this.status, company.status) &&
                super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(status, super.hashCode());
+        return Objects.hash(id, status, super.hashCode());
     }
 
     @Override
     public String toString() {
         String sb = "class Company {\n" +
                     "    " + toIndentedString(super.toString()) + "\n" +
+                    "    id: " + toIndentedString(id) + "\n" +
                     "    status: " + toIndentedString(status) + "\n" +
                     "}";
         return sb;
