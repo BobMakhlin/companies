@@ -1,9 +1,10 @@
-package com.makhlin.companyservice.service.exception;
+package com.makhlin.companyservice.service.error;
 
+import com.makhlin.common.exception.ErrorType;
 import lombok.Getter;
 
 @Getter
-public enum ErrorTypeEnum {
+public enum ErrorTypeEnum implements ErrorType {
 
     // BAD REQUEST 400
     INVALID_ADDRESS_CATEGORY("Address category must a value from the available categories list.", "InvalidAddressCategory"),

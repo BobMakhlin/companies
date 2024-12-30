@@ -1,9 +1,9 @@
 package com.makhlin.companyservice.service;
 
+import com.makhlin.common.exception.ItemNotFoundException;
 import com.makhlin.companyservice.domain.CompanyEntity_;
 import com.makhlin.companyservice.domain.CompanyStatus;
 import com.makhlin.companyservice.repositories.CompanyJpaRepository;
-import com.makhlin.companyservice.service.exception.ItemNotFoundException;
 import com.makhlin.companyservice.service.mappers.CompanyMapper;
 import com.makhlin.companyservice.swagger.api.CompaniesApiDelegate;
 import com.makhlin.companyservice.swagger.model.Company;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import static com.makhlin.companyservice.utils.PaginationUtil.getPaginationResponseHeaders;
+import static com.makhlin.common.utils.PaginationUtil.getPaginationResponseHeaders;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service

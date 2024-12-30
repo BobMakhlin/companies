@@ -1,15 +1,10 @@
 package com.makhlin.companyservice.service;
 
-import com.makhlin.companyservice.service.exception.BadParamsException;
-import com.makhlin.companyservice.service.exception.ItemNotFoundException;
+import com.makhlin.common.service.CommonExceptionHandler;
 import com.makhlin.companyservice.swagger.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Slf4j
 @ControllerAdvice(assignableTypes = {
@@ -17,29 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
         com.makhlin.companyservice.swagger.api.ConfigurationApiController.class,
 })
 @Order(1)
-public class CustomExceptionHandler {
-    @ExceptionHandler(value = {BadParamsException.class})
-    public ResponseEntity<Object> handleBadParamsException(BadParamsException ex) {
-        log.error("Bad params exception: {}", ex.getMessage());
-        var body = new ErrorResponse()
-                .code(ex.getCode())
-                .message(ex.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body);
+public class CustomExceptionHandler extends CommonExceptionHandler<ErrorResponse> {
+    @Override
+    protected ErrorResponse buildErrorResponse(String code, String message) {
+        return new ErrorResponse().code(code).message(message);
     }
-
-    @ExceptionHandler(value = {ItemNotFoundException.class})
-    public ResponseEntity<Object> handleItemNotFoundException(ItemNotFoundException ex) {
-        log.error("Item not found exception {}", ex.getMessage());
-        var body = new ErrorResponse()
-                .code("NotFound")
-                .message(ex.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body);
-    }
-
 }

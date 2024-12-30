@@ -1,4 +1,4 @@
-package com.makhlin.companyservice.service.exception;
+package com.makhlin.common.exception;
 
 import lombok.Getter;
 

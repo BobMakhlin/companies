@@ -1,4 +1,4 @@
-package com.makhlin.companyservice.utils;
+package com.makhlin.common.utils;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
