@@ -86,13 +86,12 @@ public class ErrorResponse {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ErrorResponse {\n");
 
-        sb.append("    code: ").append(toIndentedString(code)).append("\n");
-        sb.append("    message: ").append(toIndentedString(message)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        String sb = "class ErrorResponse {\n" +
+                    "    code: " + toIndentedString(code) + "\n" +
+                    "    message: " + toIndentedString(message) + "\n" +
+                    "}";
+        return sb;
     }
 
     /**

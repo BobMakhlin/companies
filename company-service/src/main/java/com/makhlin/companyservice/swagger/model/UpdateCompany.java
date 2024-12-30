@@ -17,10 +17,7 @@ public class UpdateCompany extends CompanyDetails {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        return true;
+        return o != null && getClass() == o.getClass();
     }
 
     @Override
@@ -30,11 +27,10 @@ public class UpdateCompany extends CompanyDetails {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class UpdateCompany {\n");
-        sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-        sb.append("}");
-        return sb.toString();
+        String sb = "class UpdateCompany {\n" +
+                    "    " + toIndentedString(super.toString()) + "\n" +
+                    "}";
+        return sb;
     }
 
     /**
