@@ -8,6 +8,7 @@ package com.makhlin.companyservice.swagger.api;
 import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.ErrorResponse;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
+import com.makhlin.companyservice.swagger.model.UpdateCompanyStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -45,6 +46,24 @@ public interface CompaniesApi {
             method = RequestMethod.POST)
     default ResponseEntity<Company> addCompany(@Parameter(in = ParameterIn.DEFAULT, description = "Company that needs to be added", schema = @Schema()) @Valid @RequestBody UpdateCompany body) {
         return getDelegate().addCompany(body);
+    }
+
+
+    @Operation(summary = "Updates the status of the company", description = "Allows to change the status of the company.", tags = {"COMPANIES"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))})
+    @RequestMapping(value = "/v1/companies/{companyId}/status",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.PUT)
+    default ResponseEntity<Void> changeCompanyStatus(@Parameter(in = ParameterIn.PATH, description = "Unique identifier of Company", required = true, schema = @Schema()) @PathVariable("companyId") UUID companyId, @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody UpdateCompanyStatus body) {
+        return getDelegate().changeCompanyStatus(companyId, body);
     }
 
 

@@ -6,43 +6,18 @@ import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
- * Company
+ * UpdateCompanyStatus
  */
 @Validated
 
 
-public class Company extends CompanyDetails {
-    @JsonProperty("id")
-    private UUID id = null;
-
+public class UpdateCompanyStatus {
     @JsonProperty("status")
     private CompanyStatus status = null;
 
-    public Company id(UUID id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Get id
-     *
-     * @return id
-     **/
-    @Schema(description = "")
-
-    @Valid
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Company status(CompanyStatus status) {
+    public UpdateCompanyStatus status(CompanyStatus status) {
         this.status = status;
         return this;
     }
@@ -72,22 +47,19 @@ public class Company extends CompanyDetails {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Company company = (Company) o;
-        return Objects.equals(this.id, company.id) &&
-               Objects.equals(this.status, company.status) &&
-               super.equals(o);
+        UpdateCompanyStatus updateCompanyStatus = (UpdateCompanyStatus) o;
+        return Objects.equals(this.status, updateCompanyStatus.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, super.hashCode());
+        return Objects.hash(status);
     }
 
     @Override
     public String toString() {
-        String sb = "class Company {\n" +
-                    "    " + toIndentedString(super.toString()) + "\n" +
-                    "    id: " + toIndentedString(id) + "\n" +
+
+        String sb = "class UpdateCompanyStatus {\n" +
                     "    status: " + toIndentedString(status) + "\n" +
                     "}";
         return sb;

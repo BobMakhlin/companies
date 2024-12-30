@@ -3,6 +3,7 @@ package com.makhlin.companyservice.swagger.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
+import com.makhlin.companyservice.swagger.model.UpdateCompanyStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,18 @@ public interface CompaniesApiDelegate {
                     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
+        } else {
+            log.warn("ObjectMapper or HttpServletRequest not configured in default CompaniesApi interface so no example is generated");
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * @see CompaniesApi#changeCompanyStatus
+     */
+    default ResponseEntity<Void> changeCompanyStatus(UUID companyId,
+                                                     UpdateCompanyStatus body) {
+        if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
         } else {
             log.warn("ObjectMapper or HttpServletRequest not configured in default CompaniesApi interface so no example is generated");
         }
