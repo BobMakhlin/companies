@@ -7,6 +7,7 @@ import com.makhlin.companyservice.service.mappers.CompanyMapper;
 import com.makhlin.companyservice.swagger.api.CompaniesApiDelegate;
 import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
+import com.makhlin.companyservice.swagger.model.UpdateCompanyStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,19 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         var company = companyMapper.companyEntityToCompany(savedEntity);
 
         return new ResponseEntity<>(company, OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> changeCompanyStatus(UUID companyId, UpdateCompanyStatus body) {
+        log.info("Change company status, companyId = {}", companyId);
+
+        var companyStatus = companyMapper.statusToCompanyStatus(body.getStatus());
+        var companyEntity = companyJpaRepository.findById(companyId)
+                .orElseThrow(() -> new ItemNotFoundException(companyId));
+        companyEntity.setStatus(companyStatus);
+        companyJpaRepository.saveAndFlush(companyEntity);
+
+        return new ResponseEntity<>(OK);
     }
 
     @Override

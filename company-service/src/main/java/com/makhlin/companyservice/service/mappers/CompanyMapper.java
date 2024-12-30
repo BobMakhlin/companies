@@ -1,6 +1,7 @@
 package com.makhlin.companyservice.service.mappers;
 
 import com.makhlin.companyservice.domain.CompanyEntity;
+import com.makhlin.companyservice.domain.CompanyStatus;
 import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.Contacts;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
@@ -22,4 +23,6 @@ public abstract class CompanyMapper {
     public abstract Company companyEntityToCompany(CompanyEntity companyEntity);
 
     public abstract Contacts companyEntityToContacts(CompanyEntity companyEntity);
+
+    public abstract CompanyStatus statusToCompanyStatus(com.makhlin.companyservice.swagger.model.CompanyStatus companyStatus);
 }
