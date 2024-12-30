@@ -81,8 +81,8 @@ public interface CompaniesApiDelegate {
     /**
      * @see CompaniesApi#getCompanies
      */
-    default ResponseEntity<List<Company>> getCompanies(Integer offset,
-                                                       Integer limit) {
+    default ResponseEntity<List<Company>> getCompanies(Integer pageNumber,
+                                                       Integer pageSize) {
         if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {

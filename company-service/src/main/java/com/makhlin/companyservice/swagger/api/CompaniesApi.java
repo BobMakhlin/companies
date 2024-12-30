@@ -94,10 +94,9 @@ public interface CompaniesApi {
     @RequestMapping(value = "/v1/companies",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    default ResponseEntity<List<Company>> getCompanies(@Min(0) @Parameter(in = ParameterIn.QUERY, description = "Items offset (minimum 0). Default is 0", schema = @Schema(allowableValues = {"0"}
-            , defaultValue = "0")) @Valid @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset, @Min(20) @Max(1500) @Parameter(in = ParameterIn.QUERY, description = "Number of items to list (minimum 20, maximum 500)", schema = @Schema(allowableValues = {"20", "1500"}, minimum = "20", maximum = "1500"
-            , defaultValue = "20")) @Valid @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
-        return getDelegate().getCompanies(offset, limit);
+    default ResponseEntity<List<Company>> getCompanies(@Parameter(in = ParameterIn.QUERY, description = "", schema = @Schema()) @Valid @RequestParam(value = "pageNumber", required = false) Integer pageNumber, @Min(20) @Max(1500) @Parameter(in = ParameterIn.QUERY, description = "", schema = @Schema(allowableValues = {"20", "1500"}, minimum = "20", maximum = "1500"
+            , defaultValue = "20")) @Valid @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize) {
+        return getDelegate().getCompanies(pageNumber, pageSize);
     }
 
 

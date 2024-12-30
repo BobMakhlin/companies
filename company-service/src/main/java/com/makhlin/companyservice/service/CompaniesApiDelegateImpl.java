@@ -1,5 +1,6 @@
 package com.makhlin.companyservice.service;
 
+import com.makhlin.companyservice.domain.CompanyEntity_;
 import com.makhlin.companyservice.domain.CompanyStatus;
 import com.makhlin.companyservice.repositories.CompanyJpaRepository;
 import com.makhlin.companyservice.service.exception.ItemNotFoundException;
@@ -9,12 +10,17 @@ import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
 import com.makhlin.companyservice.swagger.model.UpdateCompanyStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
+import static com.makhlin.companyservice.utils.PaginationUtil.getPaginationResponseHeaders;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -58,5 +64,17 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         var company = companyMapper.companyEntityToCompany(companyEntity);
 
         return new ResponseEntity<>(company, OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Company>> getCompanies(Integer pageNumber, Integer pageSize) {
+        log.info("Get companies, pageNumber = {}, pageSize = {}", pageNumber, pageSize);
+
+        var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, CompanyEntity_.NAME));
+        var page = companyJpaRepository.findAll(pageable);
+        var companies = companyMapper.companyEntitiesToCompanies(page.getContent());
+        var headers = getPaginationResponseHeaders(page.getTotalElements(), page.getTotalPages());
+
+        return new ResponseEntity<>(companies, headers, HttpStatus.OK);
     }
 }

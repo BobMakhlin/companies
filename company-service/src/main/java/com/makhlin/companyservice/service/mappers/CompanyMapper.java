@@ -10,6 +10,8 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         collectionMappingStrategy = CollectionMappingStrategy.TARGET_IMMUTABLE,
@@ -21,6 +23,8 @@ public abstract class CompanyMapper {
 
     @Mapping(target = "contacts", source = ".")
     public abstract Company companyEntityToCompany(CompanyEntity companyEntity);
+
+    public abstract List<Company> companyEntitiesToCompanies(List<CompanyEntity> companyEntities);
 
     public abstract Contacts companyEntityToContacts(CompanyEntity companyEntity);
 

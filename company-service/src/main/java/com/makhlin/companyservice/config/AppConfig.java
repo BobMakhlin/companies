@@ -16,7 +16,7 @@ public class AppConfig {
                         .allowedOrigins("*")
                         .allowedHeaders("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
-                        .exposedHeaders("x-total");
+                        .exposedHeaders("x-total", "x-total-pages");
             }
         };
     }
