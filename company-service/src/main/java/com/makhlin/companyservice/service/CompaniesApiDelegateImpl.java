@@ -70,6 +70,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
     public ResponseEntity<List<Company>> getCompanies(Integer pageNumber, Integer pageSize) {
         log.info("Get companies, pageNumber = {}, pageSize = {}", pageNumber, pageSize);
 
+        // By default, sorting by name.
         var pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, CompanyEntity_.NAME));
         var page = companyJpaRepository.findAll(pageable);
         var companies = companyMapper.companyEntitiesToCompanies(page.getContent());
