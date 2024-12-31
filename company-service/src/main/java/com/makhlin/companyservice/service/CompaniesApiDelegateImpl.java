@@ -42,6 +42,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         return new ResponseEntity<>(company, OK);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Void> changeCompanyStatus(UUID companyId, UpdateCompanyStatus body) {
         log.info("Change company status, companyId = {}", companyId);
