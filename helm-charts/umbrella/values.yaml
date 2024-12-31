@@ -1,0 +1,26 @@
+kafka:
+  nameOverride: companies-kafka
+  listeners:
+    client:
+      protocol: PLAINTEXT
+  kraft:
+    enabled: true
+    clusterId: companies
+
+kafka-ui:
+  yamlApplicationConfig:
+    kafka:
+      clusters:
+        - name: yaml
+          bootstrapServers: app-companies-kafka:9092
+    auth:
+      type: disabled
+    management:
+      health:
+        ldap:
+          enabled: false
+
+postgresql:
+  nameOverride: companies-postgres
+  auth:
+    postgresPassword: "password"

@@ -1,0 +1,18 @@
+dependencies:
+- name: analytics-service
+  repository: file://../../analytics-service/helm
+  version: 0.0.1
+- name: company-service
+  repository: file://../../company-service/helm
+  version: 0.0.1
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 16.3.4
+- name: kafka
+  repository: https://charts.bitnami.com/bitnami
+  version: 31.1.1
+- name: kafka-ui
+  repository: https://ui.charts.kafbat.io/
+  version: 1.4.9
+digest: sha256:b2d92e112e69007a808cab3319960a241433f9598bc3d1ec41289f2f0aed6419
+generated: "2025-01-01T01:04:56.4491518+02:00"
