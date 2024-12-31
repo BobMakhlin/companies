@@ -1,0 +1,154 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: companies-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: companies-postgres
+  template:
+    metadata:
+      labels:
+        app: companies-postgres
+    spec:
+      containers:
+        - name: companies-postgres
+          image: postgres:16-alpine
+          env:
+            - name: POSTGRES_PASSWORD
+              value: password
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: companies-postgres
+spec:
+  selector:
+    app: companies-postgres
+  ports:
+    - name: tcp
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: companies-company-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: companies-company-service
+  template:
+    metadata:
+      labels:
+        app: companies-company-service
+    spec:
+      containers:
+        - name: companies-company-service
+          image: borismakhlin/company-service:0.0.1
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://companies-postgres:5432/company
+            - name: SPRING_DATASOURCE_USERNAME
+              value: company
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: companypass
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: companies-analytics-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: companies-analytics-service
+  template:
+    metadata:
+      labels:
+        app: companies-analytics-service
+    spec:
+      containers:
+        - name: companies-analytics-service
+          image: borismakhlin/analytics-service:0.0.1
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://companies-postgres:5432/analytics
+            - name: SPRING_DATASOURCE_USERNAME
+              value: analytics
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: analyticspass
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: companies-company-service
+spec:
+  selector:
+    app: companies-company-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5010
+      nodePort: 30002
+  type: NodePort
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: companies-analytics-service
+spec:
+  selector:
+    app: companies-analytics-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5020
+      nodePort: 30001
+  type: NodePort
+
+---
+
+# A temp solution for creating databases for services.
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-init-job
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: db-init-job
+    spec:
+      containers:
+        - name: init
+          image: governmentpaas/psql:latest
+          command: [ "/bin/sh", "-c" ]
+          env:
+            - name: PGPASSWORD
+              value: "password"
+          args:
+            - |
+              echo 'Starting company database init'
+              psql "postgresql://postgres:$PGPASSWORD@companies-postgres/postgres" -c "CREATE USER \"company\" WITH PASSWORD 'companypass'" -c "CREATE DATABASE \"company\" OWNER \"company\"" -c "GRANT ALL PRIVILEGES ON DATABASE \"company\" TO \"company\""
+              echo 'Company database init completed'
+              echo 'Starting analytics database init'
+              psql "postgresql://postgres:$PGPASSWORD@companies-postgres/postgres" -c "CREATE USER \"analytics\" WITH PASSWORD 'analyticspass'" -c "CREATE DATABASE \"analytics\" OWNER \"analytics\"" -c "GRANT ALL PRIVILEGES ON DATABASE \"analytics\" TO \"analytics\""
+              echo 'Analytics database init completed'
+      restartPolicy: Never
