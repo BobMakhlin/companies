@@ -2,7 +2,11 @@ package com.makhlin.companyservice.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@EntityListeners(AuditingEntityListener.class)
 public class CompanyEntity {
     @Id
     @GeneratedValue
@@ -32,4 +37,10 @@ public class CompanyEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private CompanyStatus status;
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdDate;
+    @LastModifiedDate
+    @Column(name = "modified_at", nullable = false)
+    private Instant modifiedDate;
 }
