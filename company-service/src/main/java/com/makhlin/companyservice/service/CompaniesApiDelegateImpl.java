@@ -44,6 +44,19 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
 
     @Transactional
     @Override
+    public ResponseEntity<Company> updateCompany(UUID companyId, UpdateCompany body) {
+        log.info("Update company, companyId = {}", companyId);
+
+        var companyEntity = companyJpaRepository.findById(companyId)
+                .orElseThrow(() -> new ItemNotFoundException(companyId));
+        companyMapper.updateCompanyToCompanyEntity(body, companyEntity);
+        var company = companyMapper.companyEntityToCompany(companyEntity);
+
+        return new ResponseEntity<>(company, OK);
+    }
+
+    @Transactional
+    @Override
     public ResponseEntity<Void> changeCompanyStatus(UUID companyId, UpdateCompanyStatus body) {
         log.info("Change company status, companyId = {}", companyId);
 

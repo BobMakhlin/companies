@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Table(
         name = "company_address",
@@ -32,4 +34,16 @@ public class CompanyAddressEntity {
     private String zip;
     @Column(name = "street", nullable = false)
     private String street;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CompanyAddressEntity that = (CompanyAddressEntity) o;
+        return Objects.equals(category, that.category) && Objects.equals(country, that.country) && Objects.equals(city, that.city) && Objects.equals(zip, that.zip) && Objects.equals(street, that.street);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(category, country, city, zip, street);
+    }
 }
