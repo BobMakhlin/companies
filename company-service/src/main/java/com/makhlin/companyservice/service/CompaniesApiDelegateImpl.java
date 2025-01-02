@@ -3,6 +3,8 @@ package com.makhlin.companyservice.service;
 import com.makhlin.common.exception.ItemNotFoundException;
 import com.makhlin.companyservice.domain.CompanyEntity_;
 import com.makhlin.companyservice.domain.CompanyStatus;
+import com.makhlin.companyservice.repositories.AddressCategoryJpaRepository;
+import com.makhlin.companyservice.repositories.CompanyAddressJpaRepository;
 import com.makhlin.companyservice.repositories.CompanyJpaRepository;
 import com.makhlin.companyservice.service.mappers.CompanyMapper;
 import com.makhlin.companyservice.swagger.api.CompaniesApiDelegate;
@@ -28,6 +30,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
     private final CompanyMapper companyMapper;
     private final CompanyJpaRepository companyJpaRepository;
+    private final CompanyAddressJpaRepository companyAddressJpaRepository;
 
     @Transactional
     @Override
@@ -91,5 +94,18 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         var headers = getPaginationResponseHeaders(page.getTotalElements(), page.getTotalPages());
 
         return new ResponseEntity<>(companies, headers, HttpStatus.OK);
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<Void> deleteCompany(UUID companyId) {
+        log.info("Delete company, companyId = {}", companyId);
+
+        var companyEntity = companyJpaRepository.findById(companyId)
+                .orElseThrow(() -> new ItemNotFoundException(companyId));
+        companyAddressJpaRepository.deleteByCompany(companyEntity);
+        companyJpaRepository.delete(companyEntity);
+
+        return new ResponseEntity<>(OK);
     }
 }
