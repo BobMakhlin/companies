@@ -12,6 +12,9 @@ spec:
       labels:
         app: companies-analytics-service
     spec:
+      initContainers:
+        - name: db-init
+          {{- include "analytics-db-init" . | nindent 10 }}
       containers:
         - name: companies-analytics-service
           image: borismakhlin/analytics-service:0.0.1

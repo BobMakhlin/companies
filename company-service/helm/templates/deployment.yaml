@@ -12,6 +12,9 @@ spec:
       labels:
         app: companies-company-service
     spec:
+      initContainers:
+        - name: db-init
+          {{- include "company-db-init" . | nindent 10 }}
       containers:
         - name: companies-company-service
           image: borismakhlin/company-service:0.0.1
