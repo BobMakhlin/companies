@@ -1,0 +1,6 @@
+dependencies:
+- name: backend-library
+  repository: file://../../helm-charts/backend-library
+  version: 0.0.1
+digest: sha256:52a1cdbdf36bea51a081f83876579a22aaf7507da4bac8b9c1c717a1c39f1f0b
+generated: "2025-01-02T15:51:26.9324669+02:00"

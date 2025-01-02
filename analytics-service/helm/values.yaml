@@ -1,0 +1,4 @@
+db:
+  name: "analytics"
+  user:
+    name: "analytics"

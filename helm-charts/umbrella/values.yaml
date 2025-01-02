@@ -24,3 +24,11 @@ postgresql:
   nameOverride: companies-postgres
   auth:
     postgresPassword: "password"
+
+analytics-service:
+  db:
+    host: app-companies-postgres
+    user:
+      password: "analyticspass"
+    password: "password"
+

@@ -14,14 +14,14 @@ spec:
     spec:
       initContainers:
         - name: db-init
-          {{- include "analytics-db-init" . | nindent 10 }}
+          {{- include "backend-library.db-init" . | nindent 10 }}
       containers:
         - name: companies-analytics-service
           image: borismakhlin/analytics-service:0.0.1
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://app-companies-postgres:5432/analytics
+              value: jdbc:postgresql://{{ .Values.db.host }}:{{ default 5432 .Values.db.port }}/{{ .Values.db.name }}
             - name: SPRING_DATASOURCE_USERNAME
-              value: analytics
+              value: {{ .Values.db.user.name }}
             - name: SPRING_DATASOURCE_PASSWORD
-              value: analyticspass
+              value: {{ .Values.db.user.password }}
