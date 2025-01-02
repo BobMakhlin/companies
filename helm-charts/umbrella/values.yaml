@@ -28,7 +28,13 @@ postgresql:
 analytics-service:
   db:
     host: app-companies-postgres
+    password: "password"
     user:
       password: "analyticspass"
-    password: "password"
 
+company-service:
+  db:
+    host: app-companies-postgres
+    password: "password"
+    user:
+      password: "companypass"

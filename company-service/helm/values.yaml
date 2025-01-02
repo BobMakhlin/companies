@@ -1,0 +1,4 @@
+db:
+  name: "company"
+  user:
+    name: "company"
