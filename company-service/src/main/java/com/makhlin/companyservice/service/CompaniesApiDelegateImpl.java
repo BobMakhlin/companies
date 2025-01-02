@@ -3,7 +3,6 @@ package com.makhlin.companyservice.service;
 import com.makhlin.common.exception.ItemNotFoundException;
 import com.makhlin.companyservice.domain.CompanyEntity_;
 import com.makhlin.companyservice.domain.CompanyStatus;
-import com.makhlin.companyservice.repositories.AddressCategoryJpaRepository;
 import com.makhlin.companyservice.repositories.CompanyAddressJpaRepository;
 import com.makhlin.companyservice.repositories.CompanyJpaRepository;
 import com.makhlin.companyservice.service.mappers.CompanyMapper;
