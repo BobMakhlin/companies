@@ -22,7 +22,7 @@ public class CompanyAddressStatistics {
 
     @JsonProperty("addressStatistics")
     @Valid
-    private Map<String, Integer> addressStatistics = null;
+    private Map<String, Long> addressStatistics = null;
 
     public CompanyAddressStatistics companyId(UUID companyId) {
         this.companyId = companyId;
@@ -45,12 +45,12 @@ public class CompanyAddressStatistics {
         this.companyId = companyId;
     }
 
-    public CompanyAddressStatistics addressStatistics(Map<String, Integer> addressStatistics) {
+    public CompanyAddressStatistics addressStatistics(Map<String, Long> addressStatistics) {
         this.addressStatistics = addressStatistics;
         return this;
     }
 
-    public CompanyAddressStatistics putAddressStatisticsItem(String key, Integer addressStatisticsItem) {
+    public CompanyAddressStatistics putAddressStatisticsItem(String key, Long addressStatisticsItem) {
         if (this.addressStatistics == null) {
             this.addressStatistics = new HashMap<>();
         }
@@ -65,11 +65,11 @@ public class CompanyAddressStatistics {
      **/
     @Schema(example = "{\"warehouse\":3,\"headquarters\":1,\"retail\":5,\"storage\":2}", description = "A map where keys are address categories and values are their counts.")
 
-    public Map<String, Integer> getAddressStatistics() {
+    public Map<String, Long> getAddressStatistics() {
         return addressStatistics;
     }
 
-    public void setAddressStatistics(Map<String, Integer> addressStatistics) {
+    public void setAddressStatistics(Map<String, Long> addressStatistics) {
         this.addressStatistics = addressStatistics;
     }
 

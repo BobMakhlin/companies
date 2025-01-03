@@ -18,6 +18,9 @@ public class CompanyCurrentStatus {
     @JsonProperty("companyId")
     private UUID companyId = null;
 
+    @JsonProperty("isDeleted")
+    private Boolean isDeleted = null;
+
     @JsonProperty("status")
     private CompanyStatus status = null;
 
@@ -40,6 +43,26 @@ public class CompanyCurrentStatus {
 
     public void setCompanyId(UUID companyId) {
         this.companyId = companyId;
+    }
+
+    public CompanyCurrentStatus isDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+        return this;
+    }
+
+    /**
+     * Get isDeleted
+     *
+     * @return isDeleted
+     **/
+    @Schema(description = "")
+
+    public Boolean isIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public CompanyCurrentStatus status(CompanyStatus status) {
@@ -74,12 +97,13 @@ public class CompanyCurrentStatus {
         }
         CompanyCurrentStatus companyCurrentStatus = (CompanyCurrentStatus) o;
         return Objects.equals(this.companyId, companyCurrentStatus.companyId) &&
+               Objects.equals(this.isDeleted, companyCurrentStatus.isDeleted) &&
                Objects.equals(this.status, companyCurrentStatus.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyId, status);
+        return Objects.hash(companyId, isDeleted, status);
     }
 
     @Override
@@ -87,6 +111,7 @@ public class CompanyCurrentStatus {
 
         String sb = "class CompanyCurrentStatus {\n" +
                     "    companyId: " + toIndentedString(companyId) + "\n" +
+                    "    isDeleted: " + toIndentedString(isDeleted) + "\n" +
                     "    status: " + toIndentedString(status) + "\n" +
                     "}";
         return sb;
