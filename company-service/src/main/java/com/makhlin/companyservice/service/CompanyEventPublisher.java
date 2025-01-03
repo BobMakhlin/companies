@@ -5,5 +5,7 @@ import java.util.UUID;
 public interface CompanyEventPublisher {
     void publishCompanyDeletedEvent(UUID companyId);
 
-    void publishCompanyChangedEvent(UUID companyId);
+    void publishCompanyUpdatedEvent(UUID companyId);
+
+    void publishCompanyCreatedEvent(UUID companyId);
 }

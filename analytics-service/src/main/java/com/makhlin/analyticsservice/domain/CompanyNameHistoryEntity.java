@@ -3,7 +3,7 @@ package com.makhlin.analyticsservice.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -18,5 +18,5 @@ public class CompanyNameHistoryEntity {
     @Column(nullable = false, length = 100)
     private String name;
     @Column(name = "modified_at", nullable = false)
-    private LocalDateTime modifiedAt;
+    private Instant modifiedAt;
 }

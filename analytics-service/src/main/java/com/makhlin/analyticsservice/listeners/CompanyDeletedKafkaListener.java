@@ -5,10 +5,10 @@ import com.makhlin.common.events.CompanyDeleted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Service
+@Component
 @Slf4j
 public class CompanyDeletedKafkaListener {
     private final CompanyService companyService;

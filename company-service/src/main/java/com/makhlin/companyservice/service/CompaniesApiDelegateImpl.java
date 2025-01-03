@@ -46,7 +46,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         companyEntity.setStatus(CompanyStatus.ACTIVE);
         var savedEntity = companyJpaRepository.saveAndFlush(companyEntity);
         var company = companyMapper.companyEntityToCompany(savedEntity);
-        companyEventPublisher.publishCompanyChangedEvent(savedEntity.getId());
+        companyEventPublisher.publishCompanyCreatedEvent(savedEntity.getId());
 
         return new ResponseEntity<>(company, OK);
     }
@@ -71,7 +71,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
             throw handleDataAccessException(ex);
         }
         var company = companyMapper.companyEntityToCompany(savedEntity);
-        companyEventPublisher.publishCompanyChangedEvent(companyId);
+        companyEventPublisher.publishCompanyUpdatedEvent(companyId);
 
         return ResponseEntity
                 .ok()
@@ -99,7 +99,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         } catch (DataAccessException ex) {
             throw handleDataAccessException(ex);
         }
-        companyEventPublisher.publishCompanyChangedEvent(companyId);
+        companyEventPublisher.publishCompanyUpdatedEvent(companyId);
 
         return ResponseEntity
                 .ok()

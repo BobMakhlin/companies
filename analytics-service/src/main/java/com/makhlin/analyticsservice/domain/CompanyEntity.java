@@ -22,7 +22,6 @@ import static jakarta.persistence.CascadeType.ALL;
 @EqualsAndHashCode(of = "id")
 public class CompanyEntity {
     @Id
-    @GeneratedValue
     private UUID id;
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
