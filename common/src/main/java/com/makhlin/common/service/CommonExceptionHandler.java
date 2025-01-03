@@ -2,6 +2,7 @@ package com.makhlin.common.service;
 
 import com.makhlin.common.exception.BadParamsException;
 import com.makhlin.common.exception.ItemNotFoundException;
+import com.makhlin.common.exception.VersionConflictException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,14 @@ public abstract class CommonExceptionHandler<T> {
         var body = buildErrorResponse("NotFound", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+    }
+
+    @ExceptionHandler({VersionConflictException.class})
+    public ResponseEntity<Object> handleVersionConflictException(VersionConflictException ex) {
+        var body = buildErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
     }

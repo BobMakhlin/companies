@@ -58,7 +58,8 @@ public interface CompaniesApiDelegate {
     /**
      * @see CompaniesApi#changeCompanyStatus
      */
-    default ResponseEntity<Void> changeCompanyStatus(UUID companyId,
+    default ResponseEntity<Void> changeCompanyStatus(String ifMatch,
+                                                     UUID companyId,
                                                      UpdateCompanyStatus body) {
         if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
         } else {
@@ -120,7 +121,8 @@ public interface CompaniesApiDelegate {
     /**
      * @see CompaniesApi#updateCompany
      */
-    default ResponseEntity<Company> updateCompany(UUID companyId,
+    default ResponseEntity<Company> updateCompany(String ifMatch,
+                                                  UUID companyId,
                                                   UpdateCompany body) {
         if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {

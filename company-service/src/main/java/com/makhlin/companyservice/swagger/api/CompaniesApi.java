@@ -62,8 +62,8 @@ public interface CompaniesApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.PUT)
-    default ResponseEntity<Void> changeCompanyStatus(@Parameter(in = ParameterIn.PATH, description = "Unique identifier of Company", required = true, schema = @Schema()) @PathVariable("companyId") UUID companyId, @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody UpdateCompanyStatus body) {
-        return getDelegate().changeCompanyStatus(companyId, body);
+    default ResponseEntity<Void> changeCompanyStatus(@Parameter(in = ParameterIn.HEADER, description = "Version of updated entity", required = true, schema = @Schema()) @RequestHeader(value = "If-Match", required = true) String ifMatch, @Parameter(in = ParameterIn.PATH, description = "Unique identifier of Company", required = true, schema = @Schema()) @PathVariable("companyId") UUID companyId, @Parameter(in = ParameterIn.DEFAULT, description = "", required = true, schema = @Schema()) @Valid @RequestBody UpdateCompanyStatus body) {
+        return getDelegate().changeCompanyStatus(ifMatch, companyId, body);
     }
 
 
@@ -130,8 +130,8 @@ public interface CompaniesApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.PUT)
-    default ResponseEntity<Company> updateCompany(@Parameter(in = ParameterIn.PATH, description = "Unique identifier of Company", required = true, schema = @Schema()) @PathVariable("companyId") UUID companyId, @Parameter(in = ParameterIn.DEFAULT, description = "Parameters of the company that must be updated", required = true, schema = @Schema()) @Valid @RequestBody UpdateCompany body) {
-        return getDelegate().updateCompany(companyId, body);
+    default ResponseEntity<Company> updateCompany(@Parameter(in = ParameterIn.HEADER, description = "Version of updated entity", required = true, schema = @Schema()) @RequestHeader(value = "If-Match", required = true) String ifMatch, @Parameter(in = ParameterIn.PATH, description = "Unique identifier of Company", required = true, schema = @Schema()) @PathVariable("companyId") UUID companyId, @Parameter(in = ParameterIn.DEFAULT, description = "Parameters of the company that must be updated", required = true, schema = @Schema()) @Valid @RequestBody UpdateCompany body) {
+        return getDelegate().updateCompany(ifMatch, companyId, body);
     }
 
 }

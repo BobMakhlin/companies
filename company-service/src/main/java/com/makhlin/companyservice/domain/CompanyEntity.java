@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -49,6 +50,10 @@ public class CompanyEntity {
     @LastModifiedDate
     @Column(name = "modified_at", nullable = false)
     private Instant modifiedDate;
+    @Version
+    @Column(name = "version", nullable = false)
+    @ColumnDefault("0")
+    private int version;
 
     @OneToMany(targetEntity = CompanyAddressEntity.class,
             cascade = ALL,
@@ -67,6 +72,9 @@ public class CompanyEntity {
         addressesToCreate.forEach(this::addAddress);
     }
 
+    public void triggerVersionIncrement() {
+        this.setModifiedDate(Instant.now());
+    }
 
     private void addAddress(CompanyAddressEntity companyAddress) {
         companyAddress.setCompany(this);

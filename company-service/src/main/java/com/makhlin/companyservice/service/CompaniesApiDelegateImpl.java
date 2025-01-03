@@ -1,6 +1,8 @@
 package com.makhlin.companyservice.service;
 
 import com.makhlin.common.exception.ItemNotFoundException;
+import com.makhlin.common.exception.VersionConflictException;
+import com.makhlin.companyservice.domain.CompanyEntity;
 import com.makhlin.companyservice.domain.CompanyEntity_;
 import com.makhlin.companyservice.domain.CompanyStatus;
 import com.makhlin.companyservice.repositories.CompanyAddressJpaRepository;
@@ -10,7 +12,10 @@ import com.makhlin.companyservice.swagger.api.CompaniesApiDelegate;
 import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
 import com.makhlin.companyservice.swagger.model.UpdateCompanyStatus;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.StaleStateException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -21,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+import static com.makhlin.common.utils.IfMatchUtil.isEqualVersion;
 import static com.makhlin.common.utils.PaginationUtil.getPaginationResponseHeaders;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -30,6 +36,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
     private final CompanyMapper companyMapper;
     private final CompanyJpaRepository companyJpaRepository;
     private final CompanyAddressJpaRepository companyAddressJpaRepository;
+    private final EntityManager em;
 
     @Transactional
     @Override
@@ -46,29 +53,56 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
 
     @Transactional
     @Override
-    public ResponseEntity<Company> updateCompany(UUID companyId, UpdateCompany body) {
-        log.info("Update company, companyId = {}", companyId);
+    public ResponseEntity<Company> updateCompany(String ifMatch, UUID companyId, UpdateCompany body) {
+        log.info("Update company, ifMatch = {}, companyId = {}", ifMatch, companyId);
 
         var companyEntity = companyJpaRepository.findById(companyId)
                 .orElseThrow(() -> new ItemNotFoundException(companyId));
+        if (!isEqualVersion(ifMatch, companyEntity.getVersion())) {
+            throw new VersionConflictException();
+        }
         companyMapper.updateCompanyToCompanyEntity(body, companyEntity);
-        var company = companyMapper.companyEntityToCompany(companyEntity);
+        companyEntity.triggerVersionIncrement();
 
-        return new ResponseEntity<>(company, OK);
+        CompanyEntity savedEntity;
+        try {
+            savedEntity = companyJpaRepository.saveAndFlush(companyEntity);
+        } catch (DataAccessException ex) {
+            throw handleDataAccessException(ex);
+        }
+        var company = companyMapper.companyEntityToCompany(savedEntity);
+
+        return ResponseEntity
+                .ok()
+                .eTag(String.valueOf(savedEntity.getVersion()))
+                .body(company);
     }
 
     @Transactional
     @Override
-    public ResponseEntity<Void> changeCompanyStatus(UUID companyId, UpdateCompanyStatus body) {
-        log.info("Change company status, companyId = {}", companyId);
+    public ResponseEntity<Void> changeCompanyStatus(String ifMatch, UUID companyId, UpdateCompanyStatus body) {
+        log.info("Change company status, ifMatch = {}, companyId = {}", ifMatch, companyId);
 
         var companyStatus = companyMapper.statusToCompanyStatus(body.getStatus());
         var companyEntity = companyJpaRepository.findById(companyId)
                 .orElseThrow(() -> new ItemNotFoundException(companyId));
+        if (!isEqualVersion(ifMatch, companyEntity.getVersion())) {
+            throw new VersionConflictException();
+        }
         companyEntity.setStatus(companyStatus);
-        companyJpaRepository.saveAndFlush(companyEntity);
+        companyEntity.triggerVersionIncrement();
 
-        return new ResponseEntity<>(OK);
+        CompanyEntity savedEntity;
+        try {
+            savedEntity = companyJpaRepository.saveAndFlush(companyEntity);
+        } catch (DataAccessException ex) {
+            throw handleDataAccessException(ex);
+        }
+
+        return ResponseEntity
+                .ok()
+                .eTag(String.valueOf(savedEntity.getVersion()))
+                .build();
     }
 
     @Override
@@ -106,5 +140,13 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         companyJpaRepository.delete(companyEntity);
 
         return new ResponseEntity<>(OK);
+    }
+
+    private RuntimeException handleDataAccessException(DataAccessException ex) {
+        if (ex.getCause() instanceof StaleStateException) {
+            throw new VersionConflictException();
+        } else {
+            throw ex;
+        }
     }
 }
