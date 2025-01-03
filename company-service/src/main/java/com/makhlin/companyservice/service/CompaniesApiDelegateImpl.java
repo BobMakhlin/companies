@@ -36,7 +36,6 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
     private final CompanyMapper companyMapper;
     private final CompanyJpaRepository companyJpaRepository;
     private final CompanyAddressJpaRepository companyAddressJpaRepository;
-    private final EntityManager em;
 
     @Transactional
     @Override
