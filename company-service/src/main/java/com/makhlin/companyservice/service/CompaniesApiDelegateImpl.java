@@ -12,7 +12,6 @@ import com.makhlin.companyservice.swagger.api.CompaniesApiDelegate;
 import com.makhlin.companyservice.swagger.model.Company;
 import com.makhlin.companyservice.swagger.model.UpdateCompany;
 import com.makhlin.companyservice.swagger.model.UpdateCompanyStatus;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.StaleStateException;
 import org.springframework.dao.DataAccessException;
@@ -36,6 +35,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
     private final CompanyMapper companyMapper;
     private final CompanyJpaRepository companyJpaRepository;
     private final CompanyAddressJpaRepository companyAddressJpaRepository;
+    private final CompanyEventPublisher companyEventPublisher;
 
     @Transactional
     @Override
@@ -46,6 +46,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         companyEntity.setStatus(CompanyStatus.ACTIVE);
         var savedEntity = companyJpaRepository.saveAndFlush(companyEntity);
         var company = companyMapper.companyEntityToCompany(savedEntity);
+        companyEventPublisher.publishCompanyChangedEvent(savedEntity.getId());
 
         return new ResponseEntity<>(company, OK);
     }
@@ -70,6 +71,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
             throw handleDataAccessException(ex);
         }
         var company = companyMapper.companyEntityToCompany(savedEntity);
+        companyEventPublisher.publishCompanyChangedEvent(companyId);
 
         return ResponseEntity
                 .ok()
@@ -97,6 +99,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
         } catch (DataAccessException ex) {
             throw handleDataAccessException(ex);
         }
+        companyEventPublisher.publishCompanyChangedEvent(companyId);
 
         return ResponseEntity
                 .ok()
@@ -137,6 +140,7 @@ public class CompaniesApiDelegateImpl implements CompaniesApiDelegate {
                 .orElseThrow(() -> new ItemNotFoundException(companyId));
         companyAddressJpaRepository.deleteByCompany(companyEntity);
         companyJpaRepository.delete(companyEntity);
+        companyEventPublisher.publishCompanyDeletedEvent(companyId);
 
         return new ResponseEntity<>(OK);
     }
